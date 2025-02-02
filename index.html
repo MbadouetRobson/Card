@@ -1,0 +1,42 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Business Card Creator</title>
+</head>
+<body>
+  <h1>Create Your Digital Business Card</h1>
+  <form id="cardForm" enctype="multipart/form-data">
+    <label for="textContent">Text Content:</label>
+    <textarea id="textContent" name="textContent" required></textarea>
+    <br>
+    <label for="colors">Background Color:</label>
+    <input type="color" id="colors" name="colors" value="#ffffff">
+    <br>
+    <label for="logo">Upload Logo:</label>
+    <input type="file" id="logo" name="logo" accept="image/*">
+    <br>
+    <button type="submit">Generate Card</button>
+  </form>
+  <script>
+    document.getElementById('cardForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const response = await fetch('/generate-card', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
+      if (result.success) {
+        const img = document.createElement('img');
+        img.src = result.imagePath; // Display generated card
+        document.body.appendChild(img);
+      } else {
+        alert('Error: ' + result.error);
+      }
+    };
+  </script>
+</body>
+</html>
